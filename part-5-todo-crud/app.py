@@ -102,6 +102,7 @@ def api_login():
 @app.route('/api/todos', methods=['GET'])  # READ operation
 def get_todos():
     user_id = request.args.get('user_id')  # Get from URL: ?user_id=1 (NOT SECURE!)
+    print('user_id:', user_id)
     if not user_id:
         return jsonify({'error': 'user_id required'}), 400
 
@@ -149,11 +150,13 @@ def create_todo():
 @app.route('/api/todos/<int:todo_id>', methods=['PUT'])  # UPDATE operation
 def update_todo(todo_id):  # todo_id comes from URL: /api/todos/5
     todo = Todo.query.get(todo_id)  # Find by ID
+    print('modifying this todo:', todo)
     if not todo:
         return jsonify({'error': 'Todo not found'}), 404  # 404 = Not Found
 
     data = request.get_json()
-
+    print()
+    print(data)
     if 'task_content' in data:  # Only update if field is sent
         todo.task_content = data['task_content']
     if 'is_completed' in data:

@@ -40,6 +40,7 @@ def test_db():
     """
     # Check if test user exists
     user = User.query.filter_by(username='testuser').first()
+    print(user)
 
     if not user:
         # Create test user

@@ -65,11 +65,13 @@
                 });
 
                 const data = await response.json();
+                console.log(data)
 
                 if (response.ok) {
                     // Store token and user info
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('hi hello', 'bye buffalo');
 
                     alertArea.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
                     setTimeout(() => { window.location.href = '/dashboard'; }, 1000);

@@ -27,7 +27,9 @@ class Todo(db.Model):
     is_completed = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-
+    def __repr__(self):
+        return f'<Todo {self.id} - {self.task_content}>'
+    
 def init_db(app):
     db.init_app(app)
     with app.app_context():

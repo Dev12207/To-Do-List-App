@@ -33,6 +33,7 @@
                             <input type="text" class="form-control" id="task-input"
                                    placeholder="What needs to be done?" required>
                             <button type="submit" class="btn btn-success">Add</button>
+                            
                         </form>
                     </div>
                 </div>
@@ -67,6 +68,7 @@
 
         // Add todo form
         document.getElementById('add-form').addEventListener('submit', async function(e) {
+            console.log('inside add-form submit');
             e.preventDefault();
             const input = document.getElementById('task-input');
             const taskContent = input.value.trim();
@@ -86,6 +88,7 @@
         });
 
         async function loadTodos() {
+            console.log('inside loadTodos');
             const res = await fetch(`/api/todos?user_id=${user.id}`);
             const data = await res.json();
 
@@ -111,6 +114,9 @@
         }
 
         async function toggleTodo(id, isCompleted) {
+            console.log('inside toggleTodo');
+            console.log(isCompleted);
+            console.log(JSON.stringify({ is_completed: isCompleted }));
             await fetch(`/api/todos/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },

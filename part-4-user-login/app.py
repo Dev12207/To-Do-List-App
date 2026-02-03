@@ -96,7 +96,7 @@ def api_login():
         return jsonify({'error': 'Invalid email or password'}), 401  # 401 = Unauthorized
 
     token = create_token(user.id, user.is_admin)  # Create JWT token
-
+    print(token)
     return jsonify({
         'message': 'Login successful!',
         'token': token,  # Frontend stores this in localStorage

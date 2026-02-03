@@ -69,16 +69,26 @@ def get_current_user():
     # Step 1: Check if Authorization header exists
     if 'Authorization' not in request.headers:
         return None, (jsonify({'error': 'Token is missing'}), 401)
-
+    print("========================================")
+    print("Authorization header found.")
+    print(request.headers)
+    print(request.headers['Authorization'])
+    print("\n\n")
     # Step 2: Extract token from "Bearer <token>"
+ 
     auth_header = request.headers['Authorization']
     if not auth_header.startswith('Bearer '):
         return None, (jsonify({'error': 'Invalid token format'}), 401)
 
+    print("Split with (' ')")
+    print(auth_header.split(' '))
+    print("\n\n")
     token = auth_header.split(' ')[1]
 
     # Step 3: Decode and validate token
     data = decode_token(token)
+    print("Decoded token data:")
+    print(data)
     if not data:
         return None, (jsonify({'error': 'Token is invalid or expired'}), 401)
 

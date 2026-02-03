@@ -1,5 +1,5 @@
 # =============================================================================
-# Part 3: User Registration
+# Part 3: User Registratioerrorn
 # =============================================================================
 # Now we add user registration.
 # We will learn:
@@ -54,17 +54,28 @@ def api_register():
     Receives JSON: { "username": "...", "email": "...", "password": "..." }
     """
     data = request.get_json()
+    print(data)
 
     # Validate input
     if not data:
         return jsonify({'error': 'No data provided'}), 400
 
-    username = data.get('username')
-    email = data.get('email')
-    password = data.get('password')
+    username = data.get('username',None)
+    print(username)
+    email = data.get('email', None)
+    print(email)
+    password = data.get('password', None)
+    print(password)
 
-    if not username or not email or not password:
-        return jsonify({'error': 'All fields are required'}), 400
+    if not username:
+        print('username is missing')
+        return jsonify({'error': 'Username is required'}), 400
+    if not email:
+        print('email is missing')
+        return jsonify({'error': 'Email is required'}), 400
+    if not password:
+        print('password is missing')
+        return jsonify({'error': 'Password is required'}), 400
 
     # Check if user already exists
     if User.query.filter_by(email=email).first():

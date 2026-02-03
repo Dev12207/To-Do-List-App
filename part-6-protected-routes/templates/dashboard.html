@@ -96,7 +96,39 @@
             const taskContent = input.value.trim();
             if (!taskContent) return;
 
-            await api('/api/todos', 'POST', { task_content: taskContent });
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch('/api/todos', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        task_content: taskContent
+                    })
+                });
+
+                // Handle expired / invalid token
+                if (response.status === 401) {
+                    localStorage.clear();
+                    window.location.href = '/login';
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    console.error(data.error || 'Failed to create todo');
+                    return;
+                }
+
+                console.log('Todo created:', data);
+
+            } catch (error) {
+                console.error('Network error:', error);
+            }
             input.value = '';
             loadTodos();
         });
