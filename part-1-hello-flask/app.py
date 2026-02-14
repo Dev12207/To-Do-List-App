@@ -37,6 +37,18 @@ def contact():
     """Contact page - contact information"""
     return render_template('contact.html')
 
+@app.route('/services')
+def services():
+    """Services page - list of services offered"""
+    return render_template('services.html')
+
+@app.route('/hello')
+def hello():
+    return "Hello World"
+    
+@app.route('/hello/<name>')
+def hello_name(name):
+    return f"Hello, {name}!"
 
 # =============================================================================
 # RUN THE SERVER
@@ -46,7 +58,7 @@ if __name__ == '__main__':
     print("  Part 1: Hello Flask")
     print("  Open: http://127.0.0.1:5000")
     print("="*50 + "\n")
-    app.run(debug=True)
+    app.run(debug=True ,port=5000)
 
 
 # ============================================
