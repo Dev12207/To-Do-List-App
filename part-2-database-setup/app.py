@@ -44,22 +44,50 @@ def test_db():
 
     if not user:
         # Create test user
-        user = User(
+        user1 = User(
             username='testuser',
+            phone_number=9175895999,
             email='test@example.com',
-            password_hash='temporary'
+            password_hash='temporary')
+        
+        user2 = User(
+             username='testuser2',
+             phone_number=9175908708,
+             email='test1@gmail.com',
+             password_hash='temporary2')
+        
+        user3 =User(
+            username='testuser3',
+            phone_number=9175913245,
+            email='test2@gmail.com',
+            password_hash='temporary3'
         )
-        db.session.add(user)
+        db.session.add_all([user1, user2, user3])
         db.session.commit()
 
         # Create test todo
-        todo = Todo(
+        todo1 = Todo(
             task_content='Learn SQLAlchemy',
-            user_id=user.id
+            user_id=user1.id
         )
-        db.session.add(todo)
+        todo2=Todo(
+            task_content='Complete Activity 4',
+            user_id=user2.id
+        )
+        todo3=Todo(
+            task_content='Learn Flask',
+            user_id=user3.id
+        )
+        db.session.add_all([todo1, todo2, todo3])
         db.session.commit()
-
+        
+    #Practicing Activity 2
+    pract_users=User.query.all()
+    print(pract_users)
+    pract_first=User.query.first()
+    print(pract_first)
+    pract_count=User.query.count()
+    print(pract_count)
     # Get all users and todos for display
     all_users = User.query.all()
     all_todos = Todo.query.all()
