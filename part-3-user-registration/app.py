@@ -66,6 +66,15 @@ def api_register():
     print(email)
     password = data.get('password', None)
     print(password)
+    #check if password  is too short i.e less than 6 characters
+    if(len(password) < 6):
+        return jsonify({'error': 'Password must be at least 6 characters long'}), 400
+    #check if username contains only letters and numbers
+    if not username.isalnum():
+        return jsonify({'error': 'Username must contain only letters and numbers'}), 400
+    #check if email contains '@' symbol
+    if '@'not in email:
+        return jsonify({'error': 'Invalid email format'}), 400
 
     if not username:
         print('username is missing')
