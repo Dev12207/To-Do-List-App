@@ -10,6 +10,7 @@
         .todo-item:last-child { border-bottom: none; }
         .todo-item.completed span { text-decoration: line-through; color: #888; }
         .todo-text { flex-grow: 1; margin: 0 15px; }
+        .edit-input { flex-grow: 1; margin: 0 15px; }
     </style>
 </head>
 <body class="bg-light">
@@ -26,7 +27,6 @@
     <div class="container mt-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <!-- Add Todo Form -->
                 <div class="card shadow mb-4">
                     <div class="card-body">
                         <form id="add-form" class="d-flex gap-2">
@@ -38,7 +38,6 @@
                     </div>
                 </div>
 
-                <!-- Todo List -->
                 <div class="card shadow">
                     <div class="card-header bg-primary text-white d-flex justify-content-between">
                         <h5 class="mb-0">My Tasks</h5>
@@ -68,7 +67,6 @@
 
         // Add todo form
         document.getElementById('add-form').addEventListener('submit', async function(e) {
-            console.log('inside add-form submit');
             e.preventDefault();
             const input = document.getElementById('task-input');
             const taskContent = input.value.trim();
@@ -88,7 +86,6 @@
         });
 
         async function loadTodos() {
-            console.log('inside loadTodos');
             const res = await fetch(`/api/todos?user_id=${user.id}`);
             const data = await res.json();
 
@@ -102,7 +99,14 @@
                         <input type="checkbox" class="form-check-input"
                                ${todo.is_completed ? 'checked' : ''}
                                onchange="toggleTodo(${todo.id}, this.checked)">
-                        <span class="todo-text">${escapeHtml(todo.task_content)}</span>
+                        
+                        <span class="todo-text" id="text-${todo.id}">${escapeHtml(todo.task_content)}</span>
+                        
+                        <input type="text" class="form-control form-control-sm edit-input" id="input-${todo.id}" 
+                               value="${escapeHtml(todo.task_content)}" style="display: none;">
+
+                        <button class="btn btn-sm btn-outline-secondary me-2" id="edit-btn-${todo.id}" onclick="editTodo(${todo.id})">Edit</button>
+                        <button class="btn btn-sm btn-success me-2" id="save-btn-${todo.id}" onclick="saveTodo(${todo.id})" style="display: none;">Save</button>
                         <button class="btn btn-sm btn-outline-danger" onclick="deleteTodo(${todo.id})">Delete</button>
                     </div>
                 `).join('');
@@ -113,10 +117,46 @@
             document.getElementById('task-count').textContent = `${completed}/${data.todos.length}`;
         }
 
+        // --- NEW EDIT FUNCTIONS ---
+
+        // 1. Switch to Edit Mode
+        function editTodo(id) {
+            // Hide text and Edit button
+            document.getElementById(`text-${id}`).style.display = 'none';
+            document.getElementById(`edit-btn-${id}`).style.display = 'none';
+            
+            // Show input and Save button
+            document.getElementById(`input-${id}`).style.display = 'block';
+            document.getElementById(`save-btn-${id}`).style.display = 'block';
+            
+            // Focus the input automatically
+            document.getElementById(`input-${id}`).focus();
+        }
+
+        // 2. Save the new content
+        async function saveTodo(id) {
+            const newContent = document.getElementById(`input-${id}`).value.trim();
+            
+            // Don't save if the field is empty
+            if (!newContent) {
+                alert("Task cannot be empty!");
+                return;
+            }
+
+            // Call the PUT API to update task_content
+            await fetch(`/api/todos/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ task_content: newContent })
+            });
+            
+            // Reload the list to show the updated task
+            loadTodos();
+        }
+
+        // --- EXISTING FUNCTIONS ---
+
         async function toggleTodo(id, isCompleted) {
-            console.log('inside toggleTodo');
-            console.log(isCompleted);
-            console.log(JSON.stringify({ is_completed: isCompleted }));
             await fetch(`/api/todos/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -139,7 +179,7 @@
 
         function logout() {
             localStorage.clear();
-            window.location.href = '/';
+            window.location.href = '/login';
         }
     </script>
 </body>
