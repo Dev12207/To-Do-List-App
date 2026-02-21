@@ -218,3 +218,5 @@ if __name__ == '__main__':
     print("  Open: http://127.0.0.1:5000")
     print("="*50 + "\n")
     app.run(debug=True)
+
+# Completed Activities 1, 2, and 3
