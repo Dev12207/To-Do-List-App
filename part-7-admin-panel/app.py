@@ -272,3 +272,4 @@ def get_all_todos():
 
 if __name__ == '__main__':
     app.run(debug=True)
+# Done with all activities
